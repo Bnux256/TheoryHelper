@@ -1,53 +1,47 @@
-import requests
-import os
 import json
-from flask import Flask
-from datetime import datetime, timedelta
+import os
+from flask import Flask, render_template, request, session, make_response
+from flask_session import Session
 
-FIRST_URL: str = 'https://data.gov.il/api/3/action/datastore_search?resource_id=8c0f314f-583d-48b6-9f5f-4483d95f6848'
-BASE_URL: str = 'https://data.gov.il'
+from lib.download_cache import update_if_needed
+from lib.get_questions import get_total_questions
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend/static')
 
-def download_questions():
-    if not os.path.exists('questions'):
-        os.makedirs('questions')
+# Loading questions cache into memory
+with open(os.path.join("questions/categories.json"), 'r') as category_file:
+        questions: dict = json.loads(category_file.read())
 
-    # downloading first json file
-    first_part = requests.get(FIRST_URL, allow_redirects=True).content
-    open(f'questions/part_0.json', 'wb').write(first_part)
-    cur: dict = json.loads(first_part)
+CONFIG_FILE = "config.json"
 
-    question_amount: int = cur["result"]["total"]
-    next_part_url: str = 'https://data.gov.il' + cur["result"]["_links"]["next"]
-    last_question_in_file: int = max(cur["result"]["records"], key=lambda x:x["_id"])["_id"]
+@app.get("/")
+def choose_category():
+    # setting default cookie to {"<topic name>": [], ....}
+    user_progress: str = request.cookies.get('user_progress', default=str({key: [] for key in questions.keys()})).replace("\'", "\"")
+    progress_dict: dict = json.loads(user_progress)
+    
+    # if a category doesn't exist cookie we add it
+    for category in questions.keys():
+        progress_dict.setdefault(category, [])
 
-    # downloading all the parts until total questions == the last question
-    part_count: int = 0
-    while(question_amount != last_question_in_file):
-        part_count+=1
-        cur_part = requests.get(next_part_url, allow_redirects=True).content
-        open(f'questions/part_{part_count}.json', 'wb').write(cur_part)
-        cur: dict = json.loads(cur_part)
-        next_part_url: str = 'https://data.gov.il' + cur["result"]["_links"]["next"]
-        print("Downloaded: part_" + str(part_count))
-        last_question_in_file: int = max(cur["result"]["records"], key=lambda x:x["_id"])["_id"]
+    response = make_response(render_template("index.html", progress_dict=progress_dict, questions = questions))
+    response.set_cookie('user_progress', user_progress)
+    return response
+
+@app.post("/")
+def category_submitted():
+    print(request.form)
 
 def main():
     # importing config.json
-    with open(os.path.join('config.json'), 'r') as config_file:
+    with open(os.path.join(CONFIG_FILE), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
     
     # if questions_archive is old --> download it
-    if (conf["last_download_date"] is None) or ((datetime.now() - datetime.strptime(conf["last_download_date"], r"%m/%d/%Y")).days > 30):
-        print("questions cache is old, downloading updated cache")
-        download_questions()
-        conf["last_download_date"] = datetime.now().strftime(r"%m/%d/%Y") # update time in conf
-
-        # dumping conf dict to config.json file
-        with open('config.json', 'w') as configFile:
-            json.dump(conf, configFile)
-
+    update_if_needed(CONFIG_FILE)
+    
+    # start flask
+    app.run(host=conf["flask_host"], port=conf["flask_port"])
 
 if __name__ == "__main__":
     main()
