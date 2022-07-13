@@ -1,8 +1,9 @@
 import json
 import os
 import random
-from flask import Flask, redirect, render_template, request, session, make_response
+from flask import Flask, redirect, render_template, request, session, make_response, url_for
 
+from lib.html_parser import parse_html
 from lib.download_cache import update_if_needed
 from lib.get_questions import get_total_questions
 
@@ -45,23 +46,36 @@ def category_submitted():
                                              default=str({
                                                  key: []
                                                  for key in questions.keys()
-                                             })).replace("\'", "\""))
-    cur_category: str = request.args.get("category")
-    category_qustions_ids = [x["_id"] for x in questions[cur_category]]
-    print(category_qustions_ids)
-    cur_question_bank = list(
-        set(category_qustions_ids) - set(cur_progress[cur_category]))
-    random_quesion_id = random.choice(cur_question_bank)
-    random_question = list(
-        filter(lambda question: question['_id'] == random_quesion_id,
-               questions[cur_category]))
-    print(random_question)
+                                             })).replace("\'", "\""))  
+    try:
+        cur_category: str = request.args.get("category")
+        category_qustions_ids = [x["_id"] for x in questions[cur_category]]
+        print(category_qustions_ids)
+        cur_question_bank = list(
+            set(category_qustions_ids) - set(cur_progress[cur_category]))
+        random_quesion_id = random.choice(cur_question_bank)
+        random_question = list(
+            filter(lambda question: question['_id'] == random_quesion_id,
+                questions[cur_category]))[0]
 
-    response = make_response(render_template("question_viewer.html", cur_category=cur_category, question=random_question))
-    cur_progress[cur_category].append(random_quesion_id)
-    print(cur_progress)
-    response.set_cookie('user_progress', str(cur_progress).replace("\'", "\""))
-    return response
+        response = make_response(render_template("question_viewer.html", question=random_question, parsed_question=parse_html(random_question["description4"])))
+        cur_progress[cur_category].append(random_quesion_id)
+        print(cur_progress)
+        response.set_cookie('user_progress', str(cur_progress).replace("\'", "\""))
+        return response
+    except KeyError:
+        return redirect(url_for("choose_category"))
+
+@app.get("/iscorrect/")
+def is_ans_correct():
+    if request.args.get("option") == "True":
+        emoji: str =  "tick"
+        message: str = "כל הכבוד!"
+    else:
+        emoji: str = "X"
+        message: str = "לא נכון. התשובה הנכונה היא: " + request.args.get("correct_answer")
+        print(message)
+    return render_template("iframe.html", emoji=emoji,message=message)
 
 def main():
     # importing config.json
