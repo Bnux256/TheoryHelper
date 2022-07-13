@@ -1,7 +1,6 @@
 import json
 import os
 from flask import Flask, render_template, request, session, make_response
-from flask_session import Session
 
 from lib.download_cache import update_if_needed
 from lib.get_questions import get_total_questions
@@ -37,9 +36,11 @@ def main():
     with open(os.path.join(CONFIG_FILE), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
     
-    # if questions_archive is old --> download it
-    update_if_needed(CONFIG_FILE)
-    
+    # create secreat key
+    update_if_needed(CONFIG_FILE) # if questions_archive is old --> download it
+
+    app.config['SECRET_KEY'] = conf["secret_key"]
+
     # start flask
     app.run(host=conf["flask_host"], port=conf["flask_port"])
 
