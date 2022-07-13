@@ -1,14 +1,15 @@
 import json
 import glob
 
-def create_category_json(path: str = "questions/categories.json") -> None: 
+
+def create_category_json(path: str = "questions/categories.json") -> None:
     """
     for each category we will create a list of the question ids and json file in a dict.
     we will store result in questions/categories.json
     """
     categories: dict = {}
-    question_part_count: int = len(glob.glob1('questions',"part*"))
-    
+    question_part_count: int = len(glob.glob1('questions', "part*"))
+
     # go through the question parts
     cur_par_index: int = 0
     for part in range(question_part_count):
@@ -24,8 +25,8 @@ def create_category_json(path: str = "questions/categories.json") -> None:
 
     # dumping dict in file
     with open(path, 'w') as categoriesFile:
-            json.dump(categories, categoriesFile, ensure_ascii=False)
+        json.dump(categories, categoriesFile, ensure_ascii=False)
+
 
 def category_counter(questions: dict) -> dict:
     """given a dict {a:[1,2,3], b:[2,3]} will return: {a:3, b:2}"""
-    
