@@ -16,6 +16,13 @@ with open(os.path.join("questions/questions.json"), 'r') as category_file:
     questions: dict = json.loads(category_file.read())
 
 CONFIG_FILE = "config.json"
+with open(os.path.join(CONFIG_FILE), 'r') as config_file:
+    conf: dict = json.loads(config_file.read())
+
+update_if_needed(
+    CONFIG_FILE)  # if questions_archive is old --> download it
+
+app.config['SECRET_KEY'] = conf["secret_key"]
 
 
 @app.get("/")
@@ -113,9 +120,7 @@ def is_ans_correct():
         response.set_cookie('repeat', str(repeat_cookie).replace("\'", "\""))
     return response
 
-
 def main():
-    print('aaaaa')
     # importing config.json
     with open(os.path.join(CONFIG_FILE), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
