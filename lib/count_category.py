@@ -27,6 +27,20 @@ def create_category_json(path: str = "questions/categories.json") -> None:
     with open(path, 'w') as categoriesFile:
         json.dump(categories, categoriesFile, ensure_ascii=False)
 
-
-def category_counter(questions: dict) -> dict:
-    """given a dict {a:[1,2,3], b:[2,3]} will return: {a:3, b:2}"""
+def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict, category: str):
+    """we will go through the repeat dict. if question_id is in category we decrease it.
+    returns None or id of question that should be answered now
+    """
+    return_value = None
+    # going through ids
+    for key in repeat.keys():
+        if int(key) in category_qustions_ids:
+            repeat[key] = repeat[key] - 1
+            if repeat[key] < 1:
+                return_value = int(key)
+    
+    # if we pop the item
+    if return_value is not None:
+        repeat.pop(str(key))
+    print(repeat)
+    return return_value
