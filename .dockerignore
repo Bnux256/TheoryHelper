@@ -1,6 +1,5 @@
 questions
 .env
-config.json
 __pycache__
 lib/__pycache__
 .vscode
