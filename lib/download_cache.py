@@ -59,3 +59,9 @@ def update_if_needed(conf_path: str = "config.json") -> None:
             json.dump(conf, configFile)
 
         create_category_json()  # initialize categories
+
+
+def get_total_questions() -> int:
+    with open("questions/part_0.json", 'r') as part0:
+        part0_dict = json.loads(part0.read())
+        return part0_dict["result"]["total"]
