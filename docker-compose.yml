@@ -1,0 +1,7 @@
+version: '3.5'
+services:
+  TheoryHelper:
+    image: bnux256/theoryhelper:latest
+    restart: on-failure
+    ports:
+      - 8000:8000
