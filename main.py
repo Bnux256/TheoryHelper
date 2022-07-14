@@ -11,10 +11,6 @@ app = Flask(__name__,
             template_folder='frontend/templates',
             static_folder='frontend/static')
 
-# Loading questions cache into memory
-with open(os.path.join("questions/questions.json"), 'r') as category_file:
-    questions: dict = json.loads(category_file.read())
-
 CONFIG_FILE = "config.json"
 with open(os.path.join(CONFIG_FILE), 'r') as config_file:
     conf: dict = json.loads(config_file.read())
@@ -23,6 +19,10 @@ update_if_needed(
     CONFIG_FILE)  # if questions_archive is old --> download it
 
 app.config['SECRET_KEY'] = conf["secret_key"]
+
+# Loading questions cache into memory
+with open(os.path.join("questions/questions.json"), 'r') as category_file:
+    questions: dict = json.loads(category_file.read())
 
 
 @app.get("/")
