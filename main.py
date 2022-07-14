@@ -12,7 +12,7 @@ app = Flask(__name__,
             static_folder='frontend/static')
 
 CONFIG_FILE = "config.json"
-with open(os.path.join(CONFIG_FILE), 'r') as config_file:
+with open(CONFIG_FILE, 'r') as config_file:
     conf: dict = json.loads(config_file.read())
 
 update_if_needed(
