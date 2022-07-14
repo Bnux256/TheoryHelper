@@ -2,10 +2,10 @@ import json
 import glob
 
 
-def create_category_json(path: str = "questions/categories.json") -> None:
+def create_category_json(path: str = "questions/questions.json") -> None:
     """
     for each category we will create a list of the question ids and json file in a dict.
-    we will store result in questions/categories.json
+    we will store result in questions/questions.json
     """
     categories: dict = {}
     question_part_count: int = len(glob.glob1('questions', "part*"))
