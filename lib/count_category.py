@@ -1,5 +1,6 @@
 import json
 import glob
+from statistics import quantiles
 
 
 def create_category_json(path: str = "questions/questions.json") -> None:
@@ -16,10 +17,11 @@ def create_category_json(path: str = "questions/questions.json") -> None:
         with open(f"questions/part_{cur_par_index}.json", 'r') as part_file:
             cur_part = json.loads(part_file.read())["result"]["records"]
             for question in cur_part:
-                if question["category"] not in categories.keys():
-                    categories[question["category"]] = [question]
-                else:
-                    categories[question["category"]].append(question)
+                if question["title2"].split('.')[0] < '1308': # removing all questions that aren't for cars
+                    if question["category"] not in categories.keys():
+                        categories[question["category"]] = [question]
+                    else:
+                        categories[question["category"]].append(question)
 
         cur_par_index += 1
 
