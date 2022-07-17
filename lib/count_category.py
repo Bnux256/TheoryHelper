@@ -43,6 +43,6 @@ def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict, category: st
     
     # if we pop the item
     if return_value is not None:
-        repeat.pop(str(key))
+        repeat.pop(str(return_value))
     print(repeat)
     return return_value
