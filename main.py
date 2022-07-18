@@ -4,7 +4,6 @@ import random
 from flask import Flask, redirect, render_template, request, session, make_response, url_for
 
 from lib.html_parser import parse_html
-from lib.download_cache import update_if_needed
 from lib.count_category import decrease_repeat_dict
 
 app = Flask(__name__,
@@ -14,9 +13,6 @@ app = Flask(__name__,
 CONFIG_FILE = "config.json"
 with open(CONFIG_FILE, 'r') as config_file:
     conf: dict = json.loads(config_file.read())
-
-update_if_needed(
-    CONFIG_FILE)  # if questions_archive is old --> download it
 
 app.config['SECRET_KEY'] = conf["secret_key"]
 
@@ -125,13 +121,10 @@ def main():
     with open(os.path.join(CONFIG_FILE), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
 
-    update_if_needed(
-        CONFIG_FILE)  # if questions_archive is old --> download it
-
     app.config['SECRET_KEY'] = conf["secret_key"]
 
     # start flask
-    app.run(host=conf["flask_host"], port=conf["flask_port"])
+    app.run(host=conf["host"], port=conf["port"])
 
 
 if __name__ == "__main__":
