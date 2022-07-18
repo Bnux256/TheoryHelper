@@ -2,10 +2,11 @@ import os
 import requests
 import json
 from datetime import datetime, timedelta
-from lib.count_category import create_category_json
+from count_category import create_category_json
 
 FIRST_URL: str = 'https://data.gov.il/api/3/action/datastore_search?resource_id=8c0f314f-583d-48b6-9f5f-4483d95f6848'
 BASE_URL: str = 'https://data.gov.il'
+CONF_FILE: str = 'config.json'
 
 
 def download_questions() -> None:
@@ -36,32 +37,37 @@ def download_questions() -> None:
                                          key=lambda x: x["_id"])["_id"]
 
 
-def update_if_needed(conf_path: str = "config.json") -> None:
-    # if questions_archive is old --> download it
+def add_secret_key(conf_path: str = "config.json") -> None:
+    # opening file
     with open(os.path.join(conf_path), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
 
     # add secret key:
-    if conf["last_download_date"] is None:
-        conf["secret_key"] = os.urandom(24).hex()
+    conf["secret_key"] = os.urandom(24).hex()
 
-    # checking cache date
-    if (conf["last_download_date"] is None) or (
-        (datetime.now() - datetime.strptime(conf["last_download_date"],
-                                            r"%m/%d/%Y")).days > 30):
-        print("questions cache is old, downloading updated cache")
-        download_questions()
-        conf["last_download_date"] = datetime.now().strftime(
-            r"%m/%d/%Y")  # update time in conf
-
-        # dumping conf dict to config.json file
-        with open(conf_path, 'w') as configFile:
-            json.dump(conf, configFile)
-
-        create_category_json()  # initialize categories
+    # dumping conf dict to config.json file
+    with open(conf_path, 'w') as configFile:
+        json.dump(conf, configFile)
 
 
 def get_total_questions() -> int:
     with open("questions/part_0.json", 'r') as part0:
         part0_dict = json.loads(part0.read())
         return part0_dict["result"]["total"]
+
+
+def main():
+    print('Downloading cache')
+    # Create config.json if doesn't exist
+    if not os.path.exists(CONF_FILE):
+        with open(CONF_FILE, mode='a'):
+            pass
+
+    # if file is run standalone, we download cache
+    add_secret_key(CONF_FILE)
+    download_questions()
+    create_category_json()  # initialize categories
+    print('Download complete!')
+
+if __name__ == "__main__":
+    main()
