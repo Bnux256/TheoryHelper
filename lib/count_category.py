@@ -1,6 +1,5 @@
 import json
 import glob
-from statistics import quantiles
 
 
 def create_category_json(path: str = "questions/questions.json") -> None:
