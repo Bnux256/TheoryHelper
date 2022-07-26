@@ -30,8 +30,7 @@ def create_category_json(path: str = "questions/questions.json") -> None:
         json.dump(categories, categoriesFile, ensure_ascii=False)
 
 
-def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict,
-                         category: str):
+def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict):
     """we will go through the repeat dict. if question_id is in category we decrease it.
     returns None or id of question that should be answered now
     """

@@ -1,23 +1,25 @@
 import json
 import os
 import random
-from flask import Flask, redirect, render_template, request, session, make_response, url_for
 
-from lib.html_parser import parse_html
+from flask import (Flask, make_response, redirect, render_template, request,
+                   url_for)
+
 from lib.count_category import decrease_repeat_dict
+from lib.html_parser import parse_html
 
 app = Flask(__name__,
             template_folder='frontend/templates',
             static_folder='frontend/static')
 
 CONFIG_FILE = "config.json"
-with open(CONFIG_FILE, 'r') as config_file:
+with open(CONFIG_FILE, 'r', encoding=None) as config_file:
     conf: dict = json.loads(config_file.read())
 
 app.config['SECRET_KEY'] = conf["secret_key"]
 
 # Loading questions cache into memory
-with open(os.path.join("questions/questions.json"), 'r') as category_file:
+with open(os.path.join("questions", "questions.json"), 'r', encoding=None) as category_file:
     questions: dict = json.loads(category_file.read())
 
 
@@ -60,14 +62,14 @@ def send_question():
         repeat_cookie: dict = json.loads(
             request.cookies.get('repeat', default=str({}).replace("\'", "\"")))
         repeat_question_id = decrease_repeat_dict(repeat_cookie,
-                                                  category_qustions_ids,
-                                                  cur_category)
+                                                  category_qustions_ids)
 
         if repeat_question_id is None:
             # if no question need to be repeated right now
+            # we aren't interested in the intersection between the sets - only
+            # questions that weren't answered
             cur_question_bank = list(
-                set(category_qustions_ids) - set(cur_progress[cur_category])
-            )  # we aren't intrested in the intersection between the sets - only questions that weren't answered
+                set(category_qustions_ids) - set(cur_progress[cur_category]))
             random_quesion_id = random.choice(cur_question_bank)
             cur_progress[cur_category].append(random_quesion_id)
 
@@ -109,12 +111,14 @@ def is_ans_correct():
         response = make_response(
             render_template("iframe.html", emoji=emoji, message=message))
 
-        # creating a cookie with "<id>": 4 - the 3 means: in 4 turns ask the user this question again
+        # creating a cookie with "<id>": 4 - the 3 means: in 4 turns ask the
+        # user this question again
         repeat_cookie: dict = json.loads(
             request.cookies.get('repeat', default=str({}).replace("\'", "\"")))
         repeat_cookie[request.args.get("question_id")] = 4
         response.set_cookie('repeat', str(repeat_cookie).replace("\'", "\""))
     return response
+
 
 def main():
     # importing config.json
