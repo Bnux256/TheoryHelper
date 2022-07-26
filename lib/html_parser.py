@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import random
 
+
 def parse_html(html: str):
     result = {"options": []}
     soup = BeautifulSoup(html, 'html.parser')
@@ -12,7 +13,7 @@ def parse_html(html: str):
         result["options"].append((li.text, "correct" in str(li)))
         if "correct" in str(li):
             result["correct"] = li.text
-    random.shuffle(result["options"]) # shuffling list
+    random.shuffle(result["options"])  # shuffling list
 
     # getting image
     if len(soup.findAll('img')) > 0:
