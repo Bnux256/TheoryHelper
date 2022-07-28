@@ -1,8 +1,10 @@
-# **TheoryHelper -**
-## Easily learn for the Israeli driving theory exam.
-## Start now! [theoryhelper.bnux256.duckdns.org](https://theoryhelper.bnux256.duckdns.org)
+# **TheoryHelper**
+## Easily learn for the Israeli driving theory exam for private cars.
 ### Built using Python + Flask + Bootstrap
+### Try it now: [theoryhelper.bnux256.duckdns.org](https://theoryhelper.bnux256.duckdns.org)
 ---
+
+![demo image](/docs/images/demo.png)
 ## What does it do?
 
  Uses the offical question repository and picks random questions from the chosen category. Uses spaced repetition (simpler variation on the [Leitner system](https://en.wikipedia.org/wiki/Leitner_system)) to maximize the learning efficiency.
