@@ -16,7 +16,8 @@ def create_category_json(path: str = "questions/questions.json") -> None:
         with open(f"questions/part_{cur_par_index}.json", 'r') as part_file:
             cur_part = json.loads(part_file.read())["result"]["records"]
             for question in cur_part:
-                if r"«В»" in question["description4"]: # removing all questions that aren't for cars
+                # removing all questions that aren't for cars
+                if r"«В»" in question["description4"]:
                     if question["category"] not in categories.keys():
                         categories[question["category"]] = [question]
                     else:
@@ -28,7 +29,8 @@ def create_category_json(path: str = "questions/questions.json") -> None:
     with open(path, 'w') as categoriesFile:
         json.dump(categories, categoriesFile, ensure_ascii=False)
 
-def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict, category: str):
+
+def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict):
     """we will go through the repeat dict. if question_id is in category we decrease it.
     returns None or id of question that should be answered now
     """
@@ -39,7 +41,7 @@ def decrease_repeat_dict(repeat: dict, category_qustions_ids: dict, category: st
             repeat[key] = repeat[key] - 1
             if repeat[key] < 1:
                 return_value = int(key)
-    
+
     # if we pop the item
     if return_value is not None:
         repeat.pop(str(return_value))

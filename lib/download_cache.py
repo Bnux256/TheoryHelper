@@ -19,7 +19,8 @@ def download_questions() -> None:
     cur: dict = json.loads(first_part)
 
     question_amount: int = cur["result"]["total"]
-    next_part_url: str = 'https://data.gov.il' + cur["result"]["_links"]["next"]
+    next_part_url: str = 'https://data.gov.il' + \
+        cur["result"]["_links"]["next"]
     last_question_in_file: int = max(cur["result"]["records"],
                                      key=lambda x: x["_id"])["_id"]
 
@@ -68,6 +69,7 @@ def main():
     download_questions()
     create_category_json()  # initialize categories
     print('Download complete!')
+
 
 if __name__ == "__main__":
     main()

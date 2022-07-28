@@ -1,6 +1,10 @@
 version: '3.5'
 services:
   TheoryHelper:
+    container_name: theory_helper
+    environment:
+        - PUID=1000
+        - PGID=1000
     image: bnux256/theoryhelper:latest
     restart: on-failure
     ports:
