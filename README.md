@@ -18,6 +18,7 @@
 TheoryHelper should now be running on [localhost:8000](localhost:8000)!
 ---
 ## Directory Structure - 
+```
 .
 ├── config.json
 ├── docker-compose.yml
@@ -47,4 +48,5 @@ TheoryHelper should now be running on [localhost:8000](localhost:8000)!
 ├── main.py
 ├── README.md
 └── requirments.txt
+```
 ---
