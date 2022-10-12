@@ -1,0 +1,15 @@
+{
+    "TheoryHelper": {
+        "app_function": "main.app",
+        "profile_name": null,
+        "keep_warm": false,
+        "aws_region": "eu-central-1",
+        "project_name": "theoryil-helper",
+        "http_methods": ["GET"],
+        "timeout_seconds": 200,
+        "memory_size": 128,
+        "runtime": "python3.9",
+        "s3_bucket": "theoryhelper",
+        "exclude": ["docker-compose.yml", "Dockerfile", "readme.md", ".dockerignore", ".gitignore", "docs/", ".vscode/"]
+    }
+}
