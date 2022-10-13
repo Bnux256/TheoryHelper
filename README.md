@@ -1,7 +1,7 @@
 # **TheoryHelper**
 ## Easily learn for the Israeli driving theory exam for private cars.
 ### Built using Python + Flask + Bootstrap
-### Try it now: [theoryhelper.bnux256.duckdns.org](https://theoryhelper.bnux256.duckdns.org)
+### [Try it now](https://f0i52hih93.execute-api.eu-central-1.amazonaws.com/TheoryHelper/)
 ---
 
 ![demo image](/docs/images/demo.png)
