@@ -82,7 +82,7 @@
       <h4 class="mb-3">בחר.י קטגורית שאלות: </h4>
 
       <div class="my-3">
-        <form method="get" action="/question/">
+        <form method="get" action="./question/">
           {% for category in progress_dict.keys() %}
           <div class="form-check">
             <input id="category{{ loop.index }}" name="category" value="{{category}}" type="radio"

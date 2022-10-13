@@ -1,7 +1,7 @@
 FROM python:3.10-alpine
 WORKDIR /usr/src/app
-COPY requirments.txt requirments.txt 
-RUN pip install -U pip && pip install -r requirments.txt
+COPY requirements.txt requirements.txt 
+RUN pip install -U pip && pip install -r requirements.txt
 ADD . .
 RUN python lib/download_cache.py
 EXPOSE 8000

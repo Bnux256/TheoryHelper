@@ -10,6 +10,7 @@ CONF_FILE: str = 'config.json'
 
 
 def download_questions() -> None:
+    part_files: list[str] = ['questions/part_0.json'] # keeping a list of paths to file
     if not os.path.exists('questions'):
         os.makedirs('questions')
 
@@ -19,8 +20,7 @@ def download_questions() -> None:
     cur: dict = json.loads(first_part)
 
     question_amount: int = cur["result"]["total"]
-    next_part_url: str = 'https://data.gov.il' + \
-        cur["result"]["_links"]["next"]
+    next_part_url: str = BASE_URL + cur["result"]["_links"]["next"]
     last_question_in_file: int = max(cur["result"]["records"],
                                      key=lambda x: x["_id"])["_id"]
 
@@ -28,15 +28,17 @@ def download_questions() -> None:
     part_count: int = 0
     while (question_amount != last_question_in_file):
         part_count += 1
+        filename: str = f'questions/part_{part_count}.json'
         cur_part = requests.get(next_part_url, allow_redirects=True).content
-        open(f'questions/part_{part_count}.json', 'wb').write(cur_part)
+        open(filename, 'wb').write(cur_part)
         cur: dict = json.loads(cur_part)
-        next_part_url: str = 'https://data.gov.il' + cur["result"]["_links"][
+        next_part_url: str = BASE_URL + cur["result"]["_links"][
             "next"]
         print("Downloaded: part_" + str(part_count))
         last_question_in_file: int = max(cur["result"]["records"],
                                          key=lambda x: x["_id"])["_id"]
-
+        part_files.append(filename)
+    return part_files
 
 def add_secret_key(conf_path: str = "config.json") -> None:
     # opening file
@@ -59,16 +61,18 @@ def get_total_questions() -> int:
 
 def main():
     print('Downloading cache')
-    # Create config.json if doesn't exist
-    if not os.path.exists(CONF_FILE):
-        with open(CONF_FILE, mode='a'):
-            pass
 
     # if file is run standalone, we download cache
     add_secret_key(CONF_FILE)
-    download_questions()
+    temp_files = download_questions() # creates questions cache, returns list of temp files
     create_category_json()  # initialize categories
     print('Download complete!')
+    
+    # deleting temp paths
+    for path in temp_files:
+        if os.path.exists(path): 
+            os.remove(path)
+    print('Temp files deleted')
 
 
 if __name__ == "__main__":
