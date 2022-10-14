@@ -8,15 +8,13 @@ from flask import (Flask, make_response, redirect, render_template, request,
 from lib.count_category import decrease_repeat_dict
 from lib.html_parser import parse_html
 
-app = Flask(__name__,
-            template_folder='frontend/templates',
-            static_folder='frontend/static')
+app = Flask(__name__, template_folder='frontend/')
 
 CONFIG_FILE = "config.json"
 with open(CONFIG_FILE, 'r', encoding=None) as config_file:
     conf: dict = json.loads(config_file.read())
 
-app.config['SECRET_KEY'] = conf["secret_key"]
+app.config['SECRET_KEY'] = conf.get("secret_key")
 
 # Loading questions cache into memory
 with open(os.path.join("questions", "questions.json"), 'r', encoding=None) as category_file:
@@ -125,7 +123,7 @@ def main():
     with open(os.path.join(CONFIG_FILE), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
 
-    app.config['SECRET_KEY'] = conf["secret_key"]
+    app.config['SECRET_KEY'] = conf.get("secret_key")
 
     # start flask
     app.run(host=conf["host"], port=conf["port"])
