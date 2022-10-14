@@ -1,4 +1,0 @@
-zappa
-requests
-flask
-beautifulsoup4
