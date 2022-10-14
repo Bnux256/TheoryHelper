@@ -1,1 +1,1 @@
-{"flask_host": null, "flask_port": null, "last_download_date": null}
+{"host": "0.0.0.0", "port": 80, "secret_key": null}
