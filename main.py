@@ -8,9 +8,7 @@ from flask import (Flask, make_response, redirect, render_template, request,
 from lib.count_category import decrease_repeat_dict
 from lib.html_parser import parse_html
 
-app = Flask(__name__,
-            template_folder='frontend/templates',
-            static_folder='frontend/static')
+app = Flask(__name__, template_folder='frontend/')
 
 CONFIG_FILE = "config.json"
 with open(CONFIG_FILE, 'r', encoding=None) as config_file:
