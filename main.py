@@ -14,7 +14,7 @@ CONFIG_FILE = "config.json"
 with open(CONFIG_FILE, 'r', encoding=None) as config_file:
     conf: dict = json.loads(config_file.read())
 
-app.config['SECRET_KEY'] = conf["secret_key"]
+app.config['SECRET_KEY'] = conf.get("secret_key")
 
 # Loading questions cache into memory
 with open(os.path.join("questions", "questions.json"), 'r', encoding=None) as category_file:
@@ -123,7 +123,7 @@ def main():
     with open(os.path.join(CONFIG_FILE), 'r') as config_file:
         conf: dict = json.loads(config_file.read())
 
-    app.config['SECRET_KEY'] = conf["secret_key"]
+    app.config['SECRET_KEY'] = conf.get("secret_key")
 
     # start flask
     app.run(host=conf["host"], port=conf["port"])
