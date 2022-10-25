@@ -1,0 +1,7 @@
+.*
+Dockerfile
+docker-compose.yml
+readme.md
+zappa_settings.json
+requirements-lambda.txt
+docs/
