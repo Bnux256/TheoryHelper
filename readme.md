@@ -2,7 +2,7 @@
 ## Easily learn for the Israeli driving theory exam for private cars.
 ### Built using Python + Flask + Bootstrap
 ### Doesn't use javascript!
-### Try it now: [bnux256.github.io/TheoryHelper/](https://bnux256.github.io/TheoryHelper/)
+### Try it now: [https://theoryhelper.oa.r.appspot.com/](https://theoryhelper.oa.r.appspot.com/)
 ---
 
 ![demo image](/docs/images/demo.png)
