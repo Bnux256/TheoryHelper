@@ -26,7 +26,7 @@ deploy - `zappa deploy`
 
 ### Using Docker + Docker Compose - 
 - git clone - `git clone https://github.com/Bnux256/TheoryHelper.git`
-- build Docker image - `docker build . bnux256/theoryhelper`
+- build Docker image - `docker build . -t bnux256/theoryhelper`
 - run service: docker compose up -d \
 TheoryHelper should now be running on [localhost:8000](localhost:8000)!
 ---
