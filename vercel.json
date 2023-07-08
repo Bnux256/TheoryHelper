@@ -1,4 +1,5 @@
 {
+    "buildCommand": "python3 lib/download_cache.py",
     "builds": [
         {
             "src": "./main.py",
