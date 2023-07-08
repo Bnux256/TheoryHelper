@@ -5,3 +5,4 @@ readme.md
 zappa_settings.json
 requirements-lambda.txt
 docs/
+.vercel/
