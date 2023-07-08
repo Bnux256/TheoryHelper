@@ -1,4 +1,8 @@
-runtime: python310
+runtime: python311
 entrypoint: gunicorn -b :$PORT -w 2 main:app
 
 instance_class: F1
+
+handlers:
+- url: /static
+  static_dir: static
